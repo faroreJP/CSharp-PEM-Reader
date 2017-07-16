@@ -36,6 +36,15 @@
     <Compile Include="PemReader.cs" />
     <Compile Include="LengthInfo.cs" />
     <Compile Include="TagInfo.cs" />
+    <Compile Include="BER\Content\ValueBase.cs" />
+    <Compile Include="BER\Content\ValueSequence.cs" />
+    <Compile Include="BER\Data.cs" />
+    <Compile Include="BER\Decoder.cs" />
+    <Compile Include="BER\Content\ValueOctetString.cs" />
+    <Compile Include="BER\Content\ValueNull.cs" />
+    <Compile Include="BER\Content\ValueObjectIdentifier.cs" />
+    <Compile Include="BER\Content\ValueBitString.cs" />
+    <Compile Include="BER\Content\ValueInteger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
