@@ -20,6 +20,8 @@ namespace FaroreUtil {
 
     // Decode PEM formatted public key
     public static string DecodePublicKey (string pemString) {
+      System.Console.WriteLine("[PemReader] INPUT PEM STRING : " + System.Environment.NewLine + pemString + System.Environment.NewLine);
+
       string[] splitString = pemString.Split(StringSeparators, System.StringSplitOptions.None);
 
       //------------------------------------------------------------
@@ -39,6 +41,8 @@ namespace FaroreUtil {
       // Decode BASE64 string
       string base64String = base64StringBuilder.ToString();
       byte[] berBytes    = System.Convert.FromBase64String(base64String);
+
+      System.Console.WriteLine("[PemReader] BER BINARY LENGTH : " + berBytes.Length);
 
       //------------------------------------------------------------
       // Decode ASN.1 binary
@@ -65,16 +69,16 @@ namespace FaroreUtil {
       return readBytes;
     }
 
-    private static TagInfo ReadTag (byte[] tag) {
+    private static TagInfo ReadTag (byte[] bytes) {
       byte                  readCode    = 0;
       TagInfo.eClassType    classType   = TagInfo.eClassType.Universal;
       TagInfo.eContentType  contentType = TagInfo.eContentType.Primitive; 
-      int                   byteSize   = 0;
+      int                   byteSize    = 0;
       int                   tagNumber   = 0;
 
       //------------------------------------------------------------
       // Read class type
-      readCode = (byte)((tag[0] & 0xC0) >> 6);
+      readCode = (byte)((bytes[0] & 0xC0) >> 6);
       switch (readCode) {
         case 0x00:  classType = TagInfo.eClassType.Universal;       break;
         case 0x01:  classType = TagInfo.eClassType.Application;     break;
@@ -84,11 +88,11 @@ namespace FaroreUtil {
 
       //------------------------------------------------------------
       // Read content type
-      contentType = ((tag[0] & 0x20) == 0x00 ? TagInfo.eContentType.Primitive : TagInfo.eContentType.Constructed);
+      contentType = ((bytes[0] & 0x20) == 0x00 ? TagInfo.eContentType.Primitive : TagInfo.eContentType.Constructed);
 
       //------------------------------------------------------------
       // Read length
-      readCode = (byte)(tag[0] & 0x1f);
+      readCode = (byte)(bytes[0] & 0x1f);
 
       byteSize = 1;
       if (readCode == 0x1f) {
@@ -103,8 +107,8 @@ namespace FaroreUtil {
       return new TagInfo(classType, contentType, tagNumber, byteSize);
     }
 
-    private static LengthInfo ReadLength (byte[] berBytes) {
-      byte readCode       = berBytes[0];
+    private static LengthInfo ReadLength (byte[] bytes) {
+      byte readCode       = bytes[0];
       bool isMsbEnabled   = ((readCode & 0x80) != 0x00);
       byte bit7to1        = (byte)(readCode & 0x7f);
       bool isLongDefinite = (isMsbEnabled && bit7to1 == 0x00);
@@ -114,14 +118,14 @@ namespace FaroreUtil {
           return new LengthInfo(0, 1);
         }
         else {
-          System.Console.WriteLine("LENGTH BYTE SIZE : " + bit7to1);
+          System.Console.WriteLine("[PemReader] LENGTH BYTE SIZE : " + bit7to1);
           if (bit7to1 > 4) {
             throw new System.NotSupportedException("Long definite length is not supported!");
           }
           else {
             int length = 0;
             for (int i = 0;i < bit7to1;i++) {
-              length = ((length << 8) | (berBytes[1 + i]));
+              length = ((length << 8) | (bytes[1 + i]));
             }
             return new LengthInfo(length, bit7to1);
           }
