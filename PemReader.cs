@@ -46,13 +46,13 @@ namespace FaroreUtil {
 
       // Read tag
       var tagInfo = ReadTag(bufferBytes);
-      bufferBytes = ReadOn(bufferBytes, tagInfo.TagLength);
+      bufferBytes = ReadOn(bufferBytes, tagInfo.ByteSize);
 
       // Read length
       var lengthInfo = ReadLength(bufferBytes);
       bufferBytes    = ReadOn(bufferBytes, 1); // TODO
 
-      return string.Format("[TAG] {1}{0}", System.Environment.NewLine, tagInfo.ToString());
+      return string.Format("[TAG] {1}{0}[LENGTH] {2}{0}", System.Environment.NewLine, tagInfo.ToString(), lengthInfo.ToString());
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -61,7 +61,7 @@ namespace FaroreUtil {
 
     private static byte[] ReadOn (byte[] bytes, int readLength) {
       byte[] readBytes = new byte[bytes.Length - readLength];
-      System.Buffer.BlockCopy(bytes, 0, readBytes, 0, readLength);
+      System.Buffer.BlockCopy(bytes, readLength, readBytes, 0, readBytes.Length);
       return readBytes;
     }
 
@@ -69,7 +69,7 @@ namespace FaroreUtil {
       byte                  readCode    = 0;
       TagInfo.eClassType    classType   = TagInfo.eClassType.Universal;
       TagInfo.eContentType  contentType = TagInfo.eContentType.Primitive; 
-      int                   tagLength   = 0;
+      int                   byteSize   = 0;
       int                   tagNumber   = 0;
 
       //------------------------------------------------------------
@@ -90,7 +90,7 @@ namespace FaroreUtil {
       // Read length
       readCode = (byte)(tag[0] & 0x1f);
 
-      tagLength = 1;
+      byteSize = 1;
       if (readCode == 0x1f) {
         throw new System.NotSupportedException("Any length tag is not supported!");
       }
@@ -100,20 +100,35 @@ namespace FaroreUtil {
 
       //------------------------------------------------------------
       // Create tag info instance
-      return new TagInfo(classType, contentType, tagLength, tagNumber);
+      return new TagInfo(classType, contentType, tagNumber, byteSize);
     }
 
     private static LengthInfo ReadLength (byte[] berBytes) {
       byte readCode       = berBytes[0];
       bool isMsbEnabled   = ((readCode & 0x80) != 0x00);
       byte bit7to1        = (byte)(readCode & 0x7f);
-      bool isLongDefinite = (isMsbEnabled && bit7to1 != 0x00);
+      bool isLongDefinite = (isMsbEnabled && bit7to1 == 0x00);
 
-      if (isLongDefinite) {
-        throw new System.NotSupportedException("Long definite length is not supported!");
+      if (isMsbEnabled) {
+        if (isLongDefinite) {
+          return new LengthInfo(0, 1);
+        }
+        else {
+          System.Console.WriteLine("LENGTH BYTE SIZE : " + bit7to1);
+          if (bit7to1 > 4) {
+            throw new System.NotSupportedException("Long definite length is not supported!");
+          }
+          else {
+            int length = 0;
+            for (int i = 0;i < bit7to1;i++) {
+              length = ((length << 8) | (berBytes[1 + i]));
+            }
+            return new LengthInfo(length, bit7to1);
+          }
+        }
       }
       else {
-        return new LengthInfo((int)bit7to1);
+        return new LengthInfo((int)bit7to1, 1);
       }
     }
   }

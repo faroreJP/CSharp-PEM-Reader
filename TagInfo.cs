@@ -28,18 +28,18 @@ namespace FaroreUtil {
 
     public eClassType   ClassType     { get; private set; }
     public eContentType ContentType   { get; private set; }
-    public int          TagLength     { get; private set; }
     public int          TagNumber     { get; private set; }
+    public int          ByteSize      { get; private set; }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // Constructor
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    public TagInfo (eClassType classType, eContentType contentType, int tagLength, int tagNumber) {
+    public TagInfo (eClassType classType, eContentType contentType, int tagNumber, int byteSize) {
       ClassType   = classType;
       ContentType = contentType;
-      TagLength   = tagLength;
       TagNumber   = tagNumber;
+      ByteSize    = byteSize;
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -47,7 +47,7 @@ namespace FaroreUtil {
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     public override string ToString () {
-      return string.Format("ClassType : {0}, ContentType : {1}, TagLength : {2}, TagNumber : {3}", ClassType, ContentType, TagLength, TagNumber);
+      return string.Format("ClassType : {0}, ContentType : {1}, TagNumber : {2}, ByteSize : {3}", ClassType, ContentType, TagNumber, ByteSize);
     }
   }
 }
