@@ -33,9 +33,9 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PemReader.cs" />
-    <Compile Include="LengthInfo.cs" />
-    <Compile Include="TagInfo.cs" />
+    <Compile Include="PEM\PemReader.cs" />
+    <Compile Include="BER\LengthInfo.cs" />
+    <Compile Include="BER\TagInfo.cs" />
     <Compile Include="BER\Content\ValueBase.cs" />
     <Compile Include="BER\Content\ValueSequence.cs" />
     <Compile Include="BER\Data.cs" />

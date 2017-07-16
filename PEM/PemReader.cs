@@ -4,8 +4,8 @@
 // @Date   : 2017/07/16
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-namespace FaroreUtil {
-  public class PemReader {
+namespace FaroreUtil.PEM {
+  public class Reader {
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: // Field
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -48,6 +48,8 @@ namespace FaroreUtil {
       var berObj = FaroreUtil.BER.Decoder.Decode(berBytes);
       var contents = (FaroreUtil.BER.Data[])((FaroreUtil.BER.ValueSequence)berObj.Value).Value;
 
+      //------------------------------------------------------------
+      // Decode ASN.1 binary (PUBLIC KEY)
       var key = FaroreUtil.BER.Decoder.Decode( (byte[])contents[1].Value.Value );
 
       return key.ToString();

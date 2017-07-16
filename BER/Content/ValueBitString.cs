@@ -38,7 +38,7 @@ namespace FaroreUtil.BER {
 
       int column = 0;
 
-      builder.Append(bytes[0]);
+      builder.Append(bytes[0].ToString("X2"));
       for (int i = 1;i < bytes.Length;i++) {
         column++;
 

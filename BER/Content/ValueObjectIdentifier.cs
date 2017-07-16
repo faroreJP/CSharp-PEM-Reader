@@ -10,13 +10,13 @@ namespace FaroreUtil.BER {
     // Constructor
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    public ValueObjectIdentifier (byte[] bytes) : base (DecodeObjectIdentifier(bytes)) {}
+    public ValueObjectIdentifier (byte[] bytes) : base (Decode(bytes)) {}
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // Private
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    private static byte[] DecodeObjectIdentifier (byte[] bytes) {
+    private static byte[] Decode (byte[] bytes) {
       var oidList = new System.Collections.Generic.List<byte>();
 
       oidList.Add((byte)(bytes[0] / 40));

@@ -14,7 +14,7 @@ wnR5bB9G0Pk5ni3sLjgyIL9kpmLfL6CmmNcNA5P5ImMMweueGuw6PNZ75KZw+TGf
 FQIDAQAB
 -----END PUBLIC KEY-----";
 
-      string result = FaroreUtil.PemReader.DecodePublicKey(pubKey);
+      string result = FaroreUtil.PEM.Reader.DecodePublicKey(pubKey);
       Console.WriteLine(result);
     }
   }

@@ -90,7 +90,6 @@ namespace FaroreUtil.BER {
         case 5:  return new ValueNull();
         case 6:  return new ValueObjectIdentifier(bufferBytes);
         case 16: return new ValueSequence(bufferBytes);
-
       }
 
       return null;

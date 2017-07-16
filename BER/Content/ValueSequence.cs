@@ -10,15 +10,13 @@ namespace FaroreUtil.BER {
     // Constructor
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    public ValueSequence (byte[] bytes) : base (DecodeSequenceContentBytes(bytes)) {
-
-    }
+    public ValueSequence (byte[] bytes) : base (Decode(bytes)) {}
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // Private
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    private static Data[] DecodeSequenceContentBytes (byte[] bytes) {
+    private static Data[] Decode (byte[] bytes) {
       var buffer   = bytes;
       var dataList = new System.Collections.Generic.List<Data>();
 
